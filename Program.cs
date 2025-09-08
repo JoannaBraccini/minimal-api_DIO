@@ -12,6 +12,9 @@ var builder = WebApplication.CreateBuilder(args);
 // AddScoped: Cria uma instância por requisição HTTP
 builder.Services.AddScoped<IAdministradorServico, AdministradorServico>();
 
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
+
 // Configuração do Entity Framework Core com MySQL
 builder.Services.AddDbContext<DbContexto>(options =>
 {
@@ -43,6 +46,9 @@ app.MapPost(
             return Results.Unauthorized(); // HTTP 401
     }
 );
+
+app.UseSwagger();
+app.UseSwaggerUI();
 
 // Inicia a aplicação e fica "escutando" requisições HTTP
 app.Run();
