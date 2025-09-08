@@ -1,55 +1,71 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using MinimalApi.Dominio.Entidades;
 using MinimalApi.Dominio.Interfaces;
 using MinimalApi.Dominio.ModelViews;
 using MinimalApi.Dominio.Servicos;
 using MinimalApi.DTOs;
 using MinimalApi.Infraestrutura.Db;
 
-// Cria o builder da aplicação web - responsável por configurar serviços
+#region Builder
 var builder = WebApplication.CreateBuilder(args);
 
-// Configuração de Injeção de Dependência (DI)
-// AddScoped: Cria uma instância por requisição HTTP
 builder.Services.AddScoped<IAdministradorServico, AdministradorServico>();
+builder.Services.AddScoped<IVeiculoServico, VeiculoServico>();
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-// Configuração do Entity Framework Core com MySQL
 builder.Services.AddDbContext<DbContexto>(options =>
 {
-    // UseMySql: Configura o provider MySQL com Pomelo
-    // GetConnectionString: Busca a string de conexão no appsettings.json
-    // ServerVersion.AutoDetect: Detecta automaticamente a versão do MySQL
     options.UseMySql(
         builder.Configuration.GetConnectionString("mysql"),
         ServerVersion.AutoDetect(builder.Configuration.GetConnectionString("mysql"))
     );
 });
 
-// Constrói a aplicação web com todas as configurações
 var app = builder.Build();
+#endregion
 
-// Endpoint GET na raiz - Encaminha para documentação do Swagger
+#region Home
 app.MapGet("/", () => Results.Json(new Home()));
+#endregion
 
-// Endpoint POST para login
+#region Administradores
 app.MapPost(
-    "/login",
-    // Parâmetros: DTO do body + serviço injetado automaticamente pelo DI
+    "admin/login",
     ([FromBody] LoginDTO loginDTO, IAdministradorServico administradorServico) =>
     {
-        // Chama o método Login do serviço - retorna Administrador ou null
         if (administradorServico.Login(loginDTO) != null)
-            return Results.Ok("Login com sucesso!"); // HTTP 200
+            return Results.Ok("Login com sucesso!");
         else
-            return Results.Unauthorized(); // HTTP 401
+            return Results.Unauthorized();
+    }
+);
+#endregion
+
+#region Veiculos
+app.MapPost(
+    "veiculos",
+    ([FromBody] VeiculoDTO veiculoDTO, IVeiculoServico veiculoServico) =>
+    {
+        var veiculo = new Veiculo
+        {
+            Nome = veiculoDTO.Nome,
+            Marca = veiculoDTO.Marca,
+            Ano = veiculoDTO.Ano,
+        };
+        veiculoServico.Incluir(veiculo);
+
+        return Results.Created($"/veiculo/{veiculo.Id}", veiculo);
     }
 );
 
+#endregion
+
+#region App
 app.UseSwagger();
 app.UseSwaggerUI();
 
-// Inicia a aplicação e fica "escutando" requisições HTTP
 app.Run();
+#endregion

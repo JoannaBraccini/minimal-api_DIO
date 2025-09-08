@@ -6,32 +6,57 @@ using MinimalApi.Infraestrutura.Db;
 
 namespace MinimalApi.Dominio.Servicos;
 
+/// <summary>
+/// Serviço responsável pelas operações CRUD de veículos no banco de dados.
+/// Implementa padrões de repository e utiliza Entity Framework Core para acesso aos dados.
+/// </summary>
 public class VeiculoServico : IVeiculoServico
 {
     private readonly DbContexto _contexto;
 
+    /// <summary>
+    /// Construtor que recebe o contexto do banco via injeção de dependência.
+    /// </summary>
+    /// <param name="contexto">Contexto do Entity Framework configurado no Program.cs</param>
     public VeiculoServico(DbContexto contexto)
     {
         _contexto = contexto;
     }
 
+    /// <summary>
+    /// Remove um veículo do banco de dados.
+    /// </summary>
+    /// <param name="veiculo">Entidade do veículo a ser removida</param>
     public void Apagar(Veiculo veiculo)
     {
         _contexto.Veiculos.Remove(veiculo);
         _contexto.SaveChanges();
     }
 
+    /// <summary>
+    /// Atualiza os dados de um veículo existente no banco.
+    /// </summary>
+    /// <param name="veiculo">Entidade do veículo com os dados atualizados</param>
     public void Atualizar(Veiculo veiculo)
     {
         _contexto.Veiculos.Update(veiculo);
         _contexto.SaveChanges();
     }
 
+    /// <summary>
+    /// Busca um veículo específico pelo seu identificador único.
+    /// </summary>
+    /// <param name="id">ID do veículo a ser buscado</param>
+    /// <returns>Objeto Veículo encontrado ou null se não existir</returns>
     public Veiculo? BuscaPorId(int id)
     {
         return _contexto.Veiculos.Where(v => v.Id == id).FirstOrDefault();
     }
 
+    /// <summary>
+    /// Adiciona um novo veículo ao banco de dados.
+    /// </summary>
+    /// <param name="veiculo">Entidade do veículo a ser incluída</param>
     public void Incluir(Veiculo veiculo)
     {
         _contexto.Veiculos.Add(veiculo);
@@ -51,16 +76,10 @@ public class VeiculoServico : IVeiculoServico
     /// </remarks>
     public List<Veiculo> Todos(int pagina = 1, string? nome = null, string? marca = null)
     {
-        // Inicia uma query base para todos os veículos (ainda não executa no banco)
         var query = _contexto.Veiculos.AsQueryable();
 
-        // Aplica filtro por nome se foi fornecido
         if (!string.IsNullOrEmpty(nome))
-        {
-            // EF.Functions.Like: Executa um LIKE no SQL para busca case-insensitive
-            // %{nome}% significa: qualquer texto + nome + qualquer texto
             query = query.Where(v => EF.Functions.Like(v.Nome.ToLower(), $"%{nome}%"));
-        }
 
         // query = query.Skip((pagina - 1) * 10).Take(10);
         // return query.ToList();

@@ -3,23 +3,30 @@ using MinimalApi.Dominio.Entidades;
 
 namespace MinimalApi.Infraestrutura.Db;
 
-// Contexto do Entity Framework - representa a sessão com o banco de dados
-// Primary Constructor (C# 12): recebe IConfiguration direto no construtor
+/// <summary>
+/// Contexto do Entity Framework Core que representa a sessão com o banco de dados MySQL.
+/// Configurado com Primary Constructor (C# 12) para injeção de dependência automática.
+/// </summary>
 public class DbContexto(IConfiguration configuracaoAppSettings) : DbContext
 {
-    // Campo readonly para acessar configurações do appsettings.json
     private readonly IConfiguration _configuracaoAppSettings = configuracaoAppSettings;
 
-    // DbSet: Representa uma tabela no banco - permite operações CRUD
-    // Cada DbSet vira uma tabela: Administradores e Veiculos
+    /// <summary>
+    /// Representa a tabela 'administradores' no banco de dados.
+    /// </summary>
     public DbSet<Administrador> Administradores { get; set; } = default!;
+    
+    /// <summary>
+    /// Representa a tabela 'veiculos' no banco de dados.
+    /// </summary>
     public DbSet<Veiculo> Veiculos { get; set; } = default!;
 
-    // Configuração do modelo de dados e seed data (dados iniciais)
+    /// <summary>
+    /// Configura o modelo de dados e insere dados iniciais (seed data).
+    /// </summary>
+    /// <param name="modelBuilder">Builder para configuração do modelo</param>
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        // HasData: Insere dados iniciais na tabela quando a migration é aplicada
-        // Útil para ter um usuário admin padrão para testes
         modelBuilder.Entity<Administrador>().HasData(
             new Administrador
             {
@@ -30,13 +37,14 @@ public class DbContexto(IConfiguration configuracaoAppSettings) : DbContext
             });
     }
     
-    // Configuração da conexão com o banco de dados
+    /// <summary>
+    /// Configura a conexão com o banco MySQL usando a string de conexão do appsettings.json.
+    /// </summary>
+    /// <param name="optionsBuilder">Builder para configurações do contexto</param>
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
-        // Busca a string de conexão no appsettings.json (chave: "mysql")
         var stringConexao = _configuracaoAppSettings.GetConnectionString("mysql")?.ToString();
 
-        // Se encontrou a string de conexão, configura o MySQL com Pomelo
         if (!string.IsNullOrEmpty(stringConexao))
             optionsBuilder.UseMySql(stringConexao, ServerVersion.AutoDetect(stringConexao));
     }

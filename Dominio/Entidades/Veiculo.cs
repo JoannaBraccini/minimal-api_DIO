@@ -3,23 +3,24 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MinimalApi.Dominio.Entidades;
 
-// Entidade que representa a tabela 'veiculos' no banco de dados
+/// <summary>
+/// Entidade que representa um veículo no sistema.
+/// Mapeada para a tabela 'veiculos' no banco de dados através do Entity Framework.
+/// </summary>
 public class Veiculo
 {
-    // Data Annotations: Atributos que configuram como a propriedade vira coluna no banco
-
-    [Key] // Define como chave primária (PRIMARY KEY)
-    [DatabaseGenerated(DatabaseGeneratedOption.Identity)] // Auto increment (AUTO_INCREMENT)
+    [Key]
+    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public int Id { get; set; } = default!;
 
-    [Required] // Campo obrigatório (NOT NULL)
-    [StringLength(150)] // Limite de caracteres (VARCHAR(150))
+    [Required]
+    [StringLength(150)]
     public string Nome { get; set; } = default!;
 
-    [Required] // Campo obrigatório (NOT NULL)
-    [StringLength(100)] // Limite de caracteres (VARCHAR(100))
+    [Required]
+    [StringLength(100)]
     public string Marca { get; set; } = default!;
 
-    [Required] // Campo obrigatório (NOT NULL)
-    public int Ano { get; set; } = default!; // INT NOT NULL
+    [Required]
+    public int Ano { get; set; } = default!;
 }
