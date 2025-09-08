@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MinimalApi.Dominio.Interfaces;
+using MinimalApi.Dominio.ModelViews;
 using MinimalApi.Dominio.Servicos;
 using MinimalApi.DTOs;
 using MinimalApi.Infraestrutura.Db;
@@ -30,8 +31,8 @@ builder.Services.AddDbContext<DbContexto>(options =>
 // Constrói a aplicação web com todas as configurações
 var app = builder.Build();
 
-// Endpoint GET na raiz - simples teste de funcionamento
-app.MapGet("/", () => "Welcome to This Minimal API!");
+// Endpoint GET na raiz - Encaminha para documentação do Swagger
+app.MapGet("/", () => Results.Json(new Home()));
 
 // Endpoint POST para login
 app.MapPost(
