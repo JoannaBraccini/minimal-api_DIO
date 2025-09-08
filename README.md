@@ -137,6 +137,57 @@ dotnet run
 
 <br>
 
+---
+
+## 🐛 Debug e Desenvolvimento
+
+### 🔍 **Configuração do Debug no VS Code**
+
+1. **Arquivo `.vscode/launch.json` já configurado** para debug da aplicação
+2. **Execute o debug**: Pressione `F5` ou use "Run and Debug"
+3. **Coloque breakpoints** nas linhas desejadas para inspecionar variáveis
+4. **Inspecione dados**: Variáveis aparecerão na aba "Variables" > "Locals"
+
+### 📊 **Comandos MySQL Úteis**
+
+```sql
+-- Conectar ao MySQL
+mysql -u root -p
+
+-- Selecionar o banco de dados
+USE `minimal-api`;
+
+-- Listar todas as tabelas
+SHOW TABLES;
+
+-- Ver estrutura de uma tabela
+DESC administradores;
+DESC veiculos;
+
+-- Ver dados das tabelas
+SELECT * FROM administradores;
+SELECT * FROM veiculos;
+
+-- Sair do MySQL
+EXIT;
+```
+
+### 🌐 **Testando Endpoints**
+
+#### Endpoint de Login
+
+- **Método**: `POST`
+- **URL**: `https://localhost:7020/login`
+- **Headers**: `Content-Type: application/json`
+- **Body**:
+
+```json
+{
+  "email": "administrador@teste.com",
+  "senha": "senha123"
+}
+```
+
 ### 💙 Obrigada DIO pela oportunidade de aprendizado!
 
 <br>
