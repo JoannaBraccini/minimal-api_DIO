@@ -74,7 +74,7 @@ public class VeiculoServico : IVeiculoServico
     /// A busca por nome utiliza LIKE do SQL para correspondência parcial e é case-insensitive.
     /// O parâmetro marca está declarado mas não é utilizado na implementação atual.
     /// </remarks>
-    public List<Veiculo> Todos(int pagina = 1, string? nome = null, string? marca = null)
+    public List<Veiculo> Todos(int? pagina = 1, string? nome = null, string? marca = null)
     {
         var query = _contexto.Veiculos.AsQueryable();
 
@@ -84,6 +84,9 @@ public class VeiculoServico : IVeiculoServico
         // query = query.Skip((pagina - 1) * 10).Take(10);
         // return query.ToList();
         // Alternativamente, usando query syntax:
-        return [.. query.Skip((pagina - 1) * 10).Take(10)];
+        if (pagina != null)
+            return [.. query.Skip(((int)pagina - 1) * 10).Take(10)];
+
+        return query.ToList();
     }
 }
