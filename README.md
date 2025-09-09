@@ -90,6 +90,25 @@ Para aplicar as migrações e criar/atualizar o banco de dados, execute:
 dotnet ef database update
 ```
 
+### 🔐 **Configuração JWT (Opcional)**
+
+Por padrão, a aplicação usa uma chave JWT padrão. Para production, configure sua própria chave:
+
+1. **Adicione no `appsettings.json`:**
+
+   ```json
+   {
+     "Jwt": "sua_chave_secreta_super_segura_com_mais_de_32_caracteres"
+   }
+   ```
+
+2. **Ou configure via variável de ambiente:**
+   ```bash
+   export Jwt="sua_chave_secreta"
+   ```
+
+> 💡 **Dica**: Tokens JWT expiram em 24 horas. Faça login novamente se receber erro 401.
+
 ## � Dados de Teste (Seed Data)
 
 O projeto já vem com dados iniciais para facilitar os testes:
@@ -118,22 +137,24 @@ A API possui os seguintes endpoints organizados por funcionalidade:
 
 ### 🏠 **Home**
 
-- `GET /` - Informações gerais da API
+- `GET /` - Informações gerais da API _(público)_
 
 ### 👨‍💼 **Administradores**
 
-- `POST /administradores/login` - Autenticação
-- `GET /administradores` - Listar com paginação
-- `GET /administradores/{id}` - Buscar por ID
-- `POST /administradores` - Criar novo
+- `POST /administradores/login` - Autenticação _(público)_
+- `GET /administradores` - Listar com paginação 🔒
+- `GET /administradores/{id}` - Buscar por ID 🔒
+- `POST /administradores` - Criar novo 🔒
 
 ### 🚗 **Veículos**
 
-- `GET /veiculos` - Listar com paginação e filtros
-- `GET /veiculos/{id}` - Buscar por ID
-- `POST /veiculos` - Criar novo
-- `PUT /veiculos/{id}` - Atualizar existente
-- `DELETE /veiculos/{id}` - Remover
+- `GET /veiculos` - Listar com paginação e filtros 🔒
+- `GET /veiculos/{id}` - Buscar por ID 🔒
+- `POST /veiculos` - Criar novo 🔒
+- `PUT /veiculos/{id}` - Atualizar existente 🔒
+- `DELETE /veiculos/{id}` - Remover 🔒
+
+> 🔒 = Endpoint protegido (requer token JWT)
 
 ## �🗄️ Verificando o Banco de Dados
 
@@ -177,6 +198,32 @@ dotnet run
 - **HTTP:** `http://localhost:5111`
 
 📚 **Documentação Swagger:** `https://localhost:7020/swagger`
+
+### 🔐 **Testando Autenticação JWT no Swagger**
+
+1. **Fazer Login:**
+
+   - Acesse o endpoint `POST /administradores/login`
+   - Use as credenciais padrão:
+     ```json
+     {
+       "email": "administrador@teste.com",
+       "senha": "senha123"
+     }
+     ```
+   - Copie o token JWT retornado
+
+2. **Autorizar no Swagger:**
+
+   - Clique no botão **🔒 Authorize** (canto superior direito)
+   - Cole o token no campo **Value**
+   - Clique em **Authorize**
+
+3. **Testar Endpoints Protegidos:**
+   - Agora você pode acessar todos os endpoints que requerem autenticação
+   - O token será enviado automaticamente nos headers
+
+> ⚠️ **Importante**: Todos os endpoints (exceto `/` e `/administradores/login`) requerem autenticação JWT!
 
 ## 📁 Estrutura do Projeto
 
