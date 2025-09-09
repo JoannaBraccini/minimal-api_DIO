@@ -11,8 +11,8 @@ using MinimalApi.Infraestrutura.Db;
 namespace minimal_api.Migrations
 {
     [DbContext(typeof(DbContexto))]
-    [Migration("20250908200019_VeiculosMigration")]
-    partial class VeiculosMigration
+    [Migration("20250909013414_SeedVeiculos")]
+    partial class SeedVeiculos
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -56,7 +56,7 @@ namespace minimal_api.Migrations
                         {
                             Id = 1,
                             Email = "administrador@teste.com",
-                            Perfil = "Admin",
+                            Perfil = "admin",
                             Senha = "senha123"
                         });
                 });
@@ -85,6 +85,43 @@ namespace minimal_api.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Veiculos");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Ano = 2023,
+                            Marca = "Honda",
+                            Nome = "Civic"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Ano = 2024,
+                            Marca = "Toyota",
+                            Nome = "Corolla"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Ano = 2022,
+                            Marca = "Volkswagen",
+                            Nome = "Golf"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Ano = 2023,
+                            Marca = "Hyundai",
+                            Nome = "HB20"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            Ano = 2024,
+                            Marca = "Chevrolet",
+                            Nome = "Onix"
+                        });
                 });
 #pragma warning restore 612, 618
         }

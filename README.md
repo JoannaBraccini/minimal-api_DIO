@@ -99,8 +99,10 @@ dotnet run
 
 🌐 A API estará disponível em:
 
-- **HTTPS:** `https://localhost:5001`
-- **HTTP:** `http://localhost:5000`
+- **HTTPS:** `https://localhost:7020`
+- **HTTP:** `http://localhost:5111`
+
+📚 **Documentação Swagger:** `https://localhost:7020/swagger`
 
 ## 📁 Estrutura do Projeto
 
@@ -108,11 +110,29 @@ dotnet run
 📦 minimal-api/
 ├── 🏛️ Dominio/
 │   ├── 📋 DTOs/           # Data Transfer Objects
+│   │   ├── AdministradorDTO.cs
+│   │   ├── LoginDTO.cs
+│   │   └── VeiculoDTO.cs
 │   ├── 🏢 Entidades/      # Entidades do negócio
+│   │   ├── Administrador.cs
+│   │   └── Veiculo.cs
+│   ├── 🔧 Enuns/          # Enumeradores
+│   │   └── Perfil.cs
+│   ├── 🔗 Interfaces/     # Contratos dos serviços
+│   │   ├── IAdministradorServico.cs
+│   │   └── IVeiculoServico.cs
+│   ├── 📊 ModelViews/     # Modelos de resposta
+│   │   ├── ErrosDeValidacao.cs
+│   │   └── Home.cs
 │   └── ⚙️ Servicos/       # Serviços da aplicação
+│       ├── AdministradorServico.cs
+│       └── VeiculoServico.cs
 ├── 🔧 Infraestrutura/
 │   └── 🗄️ Db/            # Contexto do banco de dados
+│       └── DbContexto.cs
 ├── 📚 Migrations/         # Migrações do Entity Framework
+├── 🎯 .vscode/           # Configurações do VS Code
+│   └── launch.json       # Configuração de debug
 └── 🚀 Program.cs          # Configuração principal da API
 ```
 
@@ -174,10 +194,10 @@ EXIT;
 
 ### 🌐 **Testando Endpoints**
 
-#### Endpoint de Login
+#### Endpoint de Login de Administrador
 
 - **Método**: `POST`
-- **URL**: `https://localhost:7020/login`
+- **URL**: `https://localhost:7020/administradores/login`
 - **Headers**: `Content-Type: application/json`
 - **Body**:
 
@@ -185,6 +205,36 @@ EXIT;
 {
   "email": "administrador@teste.com",
   "senha": "senha123"
+}
+```
+
+#### Endpoint de Criação de Administrador
+
+- **Método**: `POST`
+- **URL**: `https://localhost:7020/administradores`
+- **Headers**: `Content-Type: application/json`
+- **Body**:
+
+```json
+{
+  "email": "novo@admin.com",
+  "senha": "senha123",
+  "perfil": "admin"
+}
+```
+
+#### Endpoint de Criação de Veículo
+
+- **Método**: `POST`
+- **URL**: `https://localhost:7020/veiculos`
+- **Headers**: `Content-Type: application/json`
+- **Body**:
+
+```json
+{
+  "nome": "Civic",
+  "marca": "Honda",
+  "ano": 2023
 }
 ```
 

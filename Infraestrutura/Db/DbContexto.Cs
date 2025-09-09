@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using MinimalApi.Dominio.Entidades;
+using MinimalApi.Dominio.Enuns;
 
 namespace MinimalApi.Infraestrutura.Db;
 
@@ -33,7 +34,44 @@ public class DbContexto(IConfiguration configuracaoAppSettings) : DbContext
                 Id = 1,
                 Email = "administrador@teste.com",
                 Senha = "senha123",
-                Perfil = "Admin"
+                Perfil = "admin"
+            });
+
+        modelBuilder.Entity<Veiculo>().HasData(
+            new Veiculo
+            {
+                Id = 1,
+                Nome = "Civic",
+                Marca = "Honda",
+                Ano = 2023
+            },
+            new Veiculo
+            {
+                Id = 2,
+                Nome = "Corolla",
+                Marca = "Toyota",
+                Ano = 2024
+            },
+            new Veiculo
+            {
+                Id = 3,
+                Nome = "Golf",
+                Marca = "Volkswagen",
+                Ano = 2022
+            },
+            new Veiculo
+            {
+                Id = 4,
+                Nome = "HB20",
+                Marca = "Hyundai",
+                Ano = 2023
+            },
+            new Veiculo
+            {
+                Id = 5,
+                Nome = "Onix",
+                Marca = "Chevrolet",
+                Ano = 2024
             });
     }
     

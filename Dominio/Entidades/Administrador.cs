@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using MinimalApi.Dominio.Enuns;
 
 namespace MinimalApi.Dominio.Entidades;
 
@@ -34,7 +35,7 @@ public class Administrador
     public string Senha { get; set; } = default!;
 
     /// <summary>
-    /// Perfil de acesso do administrador (ex: "Admin", "Editor", etc.).
+    /// Perfil de acesso do administrador (ex: "admin", "editor").
     /// </summary>
     [Required]
     [StringLength(10)]
