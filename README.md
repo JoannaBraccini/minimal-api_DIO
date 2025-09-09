@@ -25,6 +25,12 @@
 - Tokens com expiração de 24 horas
 - Validações de entrada com Data Annotations
 
+### 👤 **Perfis de Usuário**
+
+- 🛡️ **Admin**: Acesso total a todos os endpoints
+- ✏️ **Editor**: Acesso apenas para consultar veículos (GET)
+- 🔒 **Controle granular**: Cada endpoint tem permissões específicas
+
 ### 🚗 **Gerenciamento de Veículos**
 
 - ✅ **CRUD Completo**: Criar, Ler, Atualizar, Deletar
@@ -37,6 +43,7 @@
 
 - **Domain-Driven Design (DDD)**: Separação em camadas
 - **JWT Authentication**: Autenticação segura baseada em tokens
+- **Role-based Authorization**: Controle de acesso granular (admin/editor)
 - **Dependency Injection**: Injeção de dependência nativa do .NET
 - **Repository Pattern**: Serviços para acesso aos dados
 - **DTO Pattern**: Data Transfer Objects para APIs
@@ -142,19 +149,21 @@ A API possui os seguintes endpoints organizados por funcionalidade:
 ### 👨‍💼 **Administradores**
 
 - `POST /administradores/login` - Autenticação _(público)_
-- `GET /administradores` - Listar com paginação 🔒
-- `GET /administradores/{id}` - Buscar por ID 🔒
-- `POST /administradores` - Criar novo 🔒
+- `GET /administradores` - Listar com paginação 🔒 **(admin)**
+- `GET /administradores/{id}` - Buscar por ID 🔒 **(admin)**
+- `POST /administradores` - Criar novo 🔒 **(admin)**
 
 ### 🚗 **Veículos**
 
-- `GET /veiculos` - Listar com paginação e filtros 🔒
-- `GET /veiculos/{id}` - Buscar por ID 🔒
-- `POST /veiculos` - Criar novo 🔒
-- `PUT /veiculos/{id}` - Atualizar existente 🔒
-- `DELETE /veiculos/{id}` - Remover 🔒
+- `GET /veiculos` - Listar com paginação e filtros 🔒 **(admin/editor)**
+- `GET /veiculos/{id}` - Buscar por ID 🔒 **(admin/editor)**
+- `POST /veiculos` - Criar novo 🔒 **(admin)**
+- `PUT /veiculos/{id}` - Atualizar existente 🔒 **(admin)**
+- `DELETE /veiculos/{id}` - Remover 🔒 **(admin)**
 
-> 🔒 = Endpoint protegido (requer token JWT)
+> 🔒 = Endpoint protegido (requer token JWT)  
+> **(admin)** = Apenas administradores  
+> **(admin/editor)** = Administradores e editores
 
 ## �🗄️ Verificando o Banco de Dados
 
@@ -204,7 +213,7 @@ dotnet run
 1. **Fazer Login:**
 
    - Acesse o endpoint `POST /administradores/login`
-   - Use as credenciais padrão:
+   - Use as credenciais padrão (perfil **admin**):
      ```json
      {
        "email": "administrador@teste.com",
@@ -220,10 +229,13 @@ dotnet run
    - Clique em **Authorize**
 
 3. **Testar Endpoints Protegidos:**
-   - Agora você pode acessar todos os endpoints que requerem autenticação
+   - Com perfil **admin**: Acesso total a todos os endpoints
+   - Com perfil **editor**: Acesso apenas aos GETs de veículos
    - O token será enviado automaticamente nos headers
 
 > ⚠️ **Importante**: Todos os endpoints (exceto `/` e `/administradores/login`) requerem autenticação JWT!
+>
+> 🔑 **Roles**: Verifique as permissões de cada endpoint na seção de documentação da API.
 
 ## 📁 Estrutura do Projeto
 

@@ -1,16 +1,18 @@
 /// <summary>
-/// Aplicação Minimal API para gerenciamento de veículos com autenticação JWT.
+/// Aplicação Minimal API para gerenciamento de veículos com autenticação JWT e controle de acesso baseado em roles.
 ///
 /// Esta aplicação implementa uma API REST segura com endpoints para:
 /// - Autenticação de administradores via email/senha com tokens JWT
 /// - CRUD completo de veículos com filtros e paginação
-/// - Sistema de autorização baseado em perfis de usuário
+/// - Sistema de autorização baseado em perfis de usuário (admin/editor)
+/// - Controle granular de acesso por roles
 /// - Documentação automática via Swagger/OpenAPI
 ///
 /// Tecnologias utilizadas:
 /// - .NET 9 Minimal API
 /// - Entity Framework Core com MySQL
-/// - JWT Bearer Authentication
+/// - JWT Bearer Authentication com Claims
+/// - Sistema de Roles (admin/editor)
 /// - Injeção de Dependência nativa
 /// - Data Annotations para validação
 /// </summary>
@@ -18,6 +20,7 @@ using System.ComponentModel.DataAnnotations;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -120,6 +123,7 @@ string GerarTokenJwt(Administrador administrador)
     {
         new("Email", administrador.Email),
         new("Perfil", administrador.Perfil),
+        new Claim(ClaimTypes.Role, administrador.Perfil),
     };
 
     var token = new JwtSecurityToken(
@@ -178,6 +182,7 @@ app.MapGet(
         }
     )
     .RequireAuthorization()
+    .RequireAuthorization(new AuthorizeAttribute { Roles = "admin" })
     .WithTags("Administradores");
 
 app.MapGet(
@@ -200,6 +205,7 @@ app.MapGet(
         }
     )
     .RequireAuthorization()
+    .RequireAuthorization(new AuthorizeAttribute { Roles = "admin" })
     .WithTags("Administradores");
 
 app.MapPost(
@@ -249,6 +255,7 @@ app.MapPost(
         }
     )
     .RequireAuthorization()
+    .RequireAuthorization(new AuthorizeAttribute { Roles = "admin" })
     .WithTags("Administradores");
 #endregion
 
@@ -289,6 +296,7 @@ app.MapPost(
         }
     )
     .RequireAuthorization()
+    .RequireAuthorization(new AuthorizeAttribute { Roles = "admin,editor" })
     .WithTags("Veiculos");
 
 app.MapGet(
@@ -316,6 +324,7 @@ app.MapGet(
         }
     )
     .RequireAuthorization()
+    .RequireAuthorization(new AuthorizeAttribute { Roles = "admin,editor" })
     .WithTags("Veiculos");
 
 app.MapPut(
@@ -340,6 +349,7 @@ app.MapPut(
         }
     )
     .RequireAuthorization()
+    .RequireAuthorization(new AuthorizeAttribute { Roles = "admin" })
     .WithTags("Veiculos");
 
 app.MapDelete(
@@ -357,6 +367,7 @@ app.MapDelete(
         }
     )
     .RequireAuthorization()
+    .RequireAuthorization(new AuthorizeAttribute { Roles = "admin" })
     .WithTags("Veiculos");
 #endregion
 
