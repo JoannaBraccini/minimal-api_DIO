@@ -4,6 +4,7 @@
   <img src="https://img.shields.io/badge/.NET-9.0-512BD4?style=for-the-badge&logo=dotnet&logoColor=white" alt=".NET 9.0" />
   <img src="https://img.shields.io/badge/Entity_Framework-Core-512BD4?style=for-the-badge&logo=microsoft&logoColor=white" alt="Entity Framework Core" />
   <img src="https://img.shields.io/badge/MySQL-4479A1?style=for-the-badge&logo=mysql&logoColor=white" alt="MySQL" />
+  <img src="https://img.shields.io/badge/JWT-Bearer-000000?style=for-the-badge&logo=jsonwebtokens&logoColor=white" alt="JWT Bearer" />
   <img src="https://img.shields.io/badge/DIO-Bootcamp-FF6B35?style=for-the-badge&logo=graduation-cap&logoColor=white" alt="DIO Bootcamp" />
 </div>
 
@@ -18,8 +19,10 @@
 
 ### 🔐 **Autenticação de Administradores**
 
-- Login com email e senha
+- Login com email e senha retornando token JWT
 - Sistema de perfis (admin/editor) usando enums
+- Autenticação Bearer Token para endpoints protegidos
+- Tokens com expiração de 24 horas
 - Validações de entrada com Data Annotations
 
 ### 🚗 **Gerenciamento de Veículos**
@@ -33,6 +36,7 @@
 ### 🏗️ **Arquitetura**
 
 - **Domain-Driven Design (DDD)**: Separação em camadas
+- **JWT Authentication**: Autenticação segura baseada em tokens
 - **Dependency Injection**: Injeção de dependência nativa do .NET
 - **Repository Pattern**: Serviços para acesso aos dados
 - **DTO Pattern**: Data Transfer Objects para APIs

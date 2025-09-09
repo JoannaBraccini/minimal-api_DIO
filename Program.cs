@@ -1,19 +1,26 @@
 /// <summary>
-/// Aplicação Minimal API para gerenciamento de veículos.
+/// Aplicação Minimal API para gerenciamento de veículos com autenticação JWT.
 ///
-/// Esta aplicação implementa uma API REST simples com endpoints para:
-/// - Autenticação de administradores via email/senha
+/// Esta aplicação implementa uma API REST segura com endpoints para:
+/// - Autenticação de administradores via email/senha com tokens JWT
 /// - CRUD completo de veículos com filtros e paginação
+/// - Sistema de autorização baseado em perfis de usuário
 /// - Documentação automática via Swagger/OpenAPI
 ///
 /// Tecnologias utilizadas:
 /// - .NET 9 Minimal API
 /// - Entity Framework Core com MySQL
+/// - JWT Bearer Authentication
 /// - Injeção de Dependência nativa
 /// - Data Annotations para validação
 /// </summary>
+using System.ComponentModel.DataAnnotations;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using MinimalApi.Dominio.Entidades;
 using MinimalApi.Dominio.Interfaces;
 using MinimalApi.Dominio.ModelViews;
@@ -23,6 +30,26 @@ using MinimalApi.Infraestrutura.Db;
 
 #region Builder
 var builder = WebApplication.CreateBuilder(args);
+var key = builder.Configuration.GetSection("Jwt").ToString();
+if (string.IsNullOrEmpty(key))
+    key = "default_key";
+
+builder
+    .Services.AddAuthentication(option =>
+    {
+        option.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+        option.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+    })
+    .AddJwtBearer(option =>
+    {
+        option.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateLifetime = true,
+            IssuerSigningKey = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(key)),
+        };
+    });
+
+builder.Services.AddAuthorization();
 
 builder.Services.AddScoped<IAdministradorServico, AdministradorServico>();
 builder.Services.AddScoped<IVeiculoServico, VeiculoServico>();
@@ -33,8 +60,8 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<DbContexto>(options =>
 {
     options.UseMySql(
-        builder.Configuration.GetConnectionString("mysql"),
-        ServerVersion.AutoDetect(builder.Configuration.GetConnectionString("mysql"))
+        builder.Configuration.GetConnectionString("MySql"),
+        ServerVersion.AutoDetect(builder.Configuration.GetConnectionString("MySql"))
     );
 });
 
@@ -46,12 +73,46 @@ app.MapGet("/", () => Results.Json(new Home())).WithTags("Home");
 #endregion
 
 #region Administradores
+string GerarTokenJwt(Administrador administrador)
+{
+    if (string.IsNullOrEmpty(key))
+        return string.Empty;
+
+    var securityKey = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(key));
+    var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
+
+    var claims = new List<Claim>()
+    {
+        new("Email", administrador.Email),
+        new("Perfil", administrador.Perfil),
+    };
+
+    var token = new JwtSecurityToken(
+        claims: claims,
+        expires: DateTime.Now.AddDays(1),
+        signingCredentials: credentials
+    );
+
+    return new JwtSecurityTokenHandler().WriteToken(token);
+}
+
 app.MapPost(
         "/administradores/login",
         ([FromBody] LoginDTO loginDTO, IAdministradorServico administradorServico) =>
         {
-            if (administradorServico.Login(loginDTO) != null)
-                return Results.Ok("Login com sucesso!");
+            var adm = administradorServico.Login(loginDTO);
+            if (adm != null)
+            {
+                string token = GerarTokenJwt(adm);
+                return Results.Ok(
+                    new AdministradorLogado
+                    {
+                        Email = adm.Email,
+                        Perfil = adm.Perfil,
+                        Token = token,
+                    }
+                );
+            }
             else
                 return Results.Unauthorized();
         }
@@ -80,6 +141,7 @@ app.MapGet(
             return Results.Ok(adms);
         }
     )
+    .RequireAuthorization()
     .WithTags("Administradores");
 
 app.MapGet(
@@ -101,6 +163,7 @@ app.MapGet(
             );
         }
     )
+    .RequireAuthorization()
     .WithTags("Administradores");
 
 app.MapPost(
@@ -149,6 +212,7 @@ app.MapPost(
             return Results.BadRequest("Erro ao criar administrador.");
         }
     )
+    .RequireAuthorization()
     .WithTags("Administradores");
 #endregion
 
@@ -188,6 +252,7 @@ app.MapPost(
             return Results.Created($"/veiculo/{veiculo.Id}", veiculo);
         }
     )
+    .RequireAuthorization()
     .WithTags("Veiculos");
 
 app.MapGet(
@@ -199,6 +264,7 @@ app.MapGet(
             return Results.Ok(veiculos);
         }
     )
+    .RequireAuthorization()
     .WithTags("Veiculos");
 
 app.MapGet(
@@ -213,6 +279,7 @@ app.MapGet(
             return Results.Ok(veiculo);
         }
     )
+    .RequireAuthorization()
     .WithTags("Veiculos");
 
 app.MapPut(
@@ -236,6 +303,7 @@ app.MapPut(
             return Results.Ok(veiculo);
         }
     )
+    .RequireAuthorization()
     .WithTags("Veiculos");
 
 app.MapDelete(
@@ -252,13 +320,16 @@ app.MapDelete(
             return Results.NoContent();
         }
     )
+    .RequireAuthorization()
     .WithTags("Veiculos");
-
 #endregion
 
 #region App
 app.UseSwagger();
 app.UseSwaggerUI();
+
+app.UseAuthentication();
+app.UseAuthorization();
 
 app.Run();
 #endregion
