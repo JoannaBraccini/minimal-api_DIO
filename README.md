@@ -14,7 +14,32 @@
 
 ---
 
-## 📋 Pré-requisitos
+## � Funcionalidades
+
+### 🔐 **Autenticação de Administradores**
+
+- Login com email e senha
+- Sistema de perfis (admin/editor) usando enums
+- Validações de entrada com Data Annotations
+
+### 🚗 **Gerenciamento de Veículos**
+
+- ✅ **CRUD Completo**: Criar, Ler, Atualizar, Deletar
+- 📄 **Paginação**: 10 veículos por página
+- 🔍 **Filtros**: Busca por nome (case-insensitive)
+- ✔️ **Validações**: Ano entre 1886 e ano atual + 1
+- 📊 **Dados de teste**: 5 veículos pré-cadastrados
+
+### 🏗️ **Arquitetura**
+
+- **Domain-Driven Design (DDD)**: Separação em camadas
+- **Dependency Injection**: Injeção de dependência nativa do .NET
+- **Repository Pattern**: Serviços para acesso aos dados
+- **DTO Pattern**: Data Transfer Objects para APIs
+
+---
+
+## �📋 Pré-requisitos
 
 Antes de começar, certifique-se de ter instalado:
 
@@ -61,7 +86,52 @@ Para aplicar as migrações e criar/atualizar o banco de dados, execute:
 dotnet ef database update
 ```
 
-## 🗄️ Verificando o Banco de Dados
+## � Dados de Teste (Seed Data)
+
+O projeto já vem com dados iniciais para facilitar os testes:
+
+### 👨‍💼 **Administrador Padrão**
+
+- **Email**: `administrador@teste.com`
+- **Senha**: `senha123`
+- **Perfil**: `admin`
+
+### 🚗 **Veículos Pré-cadastrados**
+
+1. **Honda Civic 2023**
+2. **Toyota Corolla 2024**
+3. **Volkswagen Golf 2022**
+4. **Hyundai HB20 2023**
+5. **Chevrolet Onix 2024**
+
+> 💡 **Dica**: Use esses dados para testar os endpoints sem precisar criar registros manualmente!
+
+---
+
+## 🌐 Endpoints da API
+
+A API possui os seguintes endpoints organizados por funcionalidade:
+
+### 🏠 **Home**
+
+- `GET /` - Informações gerais da API
+
+### 👨‍💼 **Administradores**
+
+- `POST /administradores/login` - Autenticação
+- `GET /administradores` - Listar com paginação
+- `GET /administradores/{id}` - Buscar por ID
+- `POST /administradores` - Criar novo
+
+### 🚗 **Veículos**
+
+- `GET /veiculos` - Listar com paginação e filtros
+- `GET /veiculos/{id}` - Buscar por ID
+- `POST /veiculos` - Criar novo
+- `PUT /veiculos/{id}` - Atualizar existente
+- `DELETE /veiculos/{id}` - Remover
+
+## �🗄️ Verificando o Banco de Dados
 
 Após aplicar as migrações, você pode verificar se as tabelas foram criadas corretamente:
 
@@ -150,10 +220,45 @@ dotnet run
 
 **Este projeto faz parte do aprendizado em .NET e demonstra:**
 
-- 🏗️ Arquitetura em camadas
-- 🗄️ Uso do Entity Framework Core
-- 🚀 Implementação de APIs mínimas
-- 📊 Gerenciamento de migrações
+- 🏗️ Arquitetura em camadas (Domain, Infrastructure, DTOs)
+- 🗄️ Entity Framework Core com MySQL
+- 🚀 Minimal APIs do .NET 9
+- 📊 Migrations e Seed Data
+- 🔐 Sistema de autenticação simples
+- ✅ Validações com Data Annotations
+- 📄 Paginação e filtros
+- 📚 Documentação XML completa
+- 🎯 Padrões DDD e Repository
+
+## 🛠️ Tecnologias Utilizadas
+
+### **Backend**
+
+- **.NET 9.0** - Framework principal
+- **ASP.NET Core Minimal APIs** - Endpoints simplificados
+- **Entity Framework Core 9.0.8** - ORM para acesso aos dados
+- **Pomelo.EntityFrameworkCore.MySql 9.0.0** - Provider MySQL
+
+### **Banco de Dados**
+
+- **MySQL** - Sistema de gerenciamento de banco de dados
+- **Migrations** - Controle de versão do schema
+- **Seed Data** - Dados iniciais para testes
+
+### **Ferramentas de Desenvolvimento**
+
+- **VS Code** - Editor principal
+- **Debug Configuration** - Configuração de debug incluída
+- **Swagger/OpenAPI** - Documentação automática da API
+- **Git** - Controle de versão
+
+### **Padrões e Práticas**
+
+- **Domain-Driven Design (DDD)** - Organização em camadas
+- **Repository Pattern** - Encapsulamento de acesso aos dados
+- **DTO Pattern** - Transferência segura de dados
+- **Dependency Injection** - Injeção de dependências nativa
+- **Nullable Reference Types** - Segurança de tipos
 
 <br>
 
@@ -237,6 +342,26 @@ EXIT;
   "ano": 2023
 }
 ```
+
+---
+
+## 📄 Licença
+
+Este projeto está licenciado sob a **MIT License** - veja o arquivo [LICENSE](LICENSE) para detalhes.
+
+### 🔓 **O que você pode fazer:**
+
+- ✅ Usar comercialmente
+- ✅ Modificar o código
+- ✅ Distribuir
+- ✅ Uso privado
+
+### 📋 **Condições:**
+
+- 📄 Incluir o copyright e licença
+- 📝 Indicar mudanças feitas
+
+---
 
 ### 💙 Obrigada DIO pela oportunidade de aprendizado!
 

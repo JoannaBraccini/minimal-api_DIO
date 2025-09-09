@@ -15,7 +15,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MinimalApi.Dominio.Entidades;
-using MinimalApi.Dominio.Enuns;
 using MinimalApi.Dominio.Interfaces;
 using MinimalApi.Dominio.ModelViews;
 using MinimalApi.Dominio.Servicos;
@@ -63,7 +62,22 @@ app.MapGet(
         "/administradores/",
         ([FromQuery] int? pagina, IAdministradorServico administradorServico) =>
         {
-            return Results.Ok(administradorServico.Todos(pagina));
+            var adms = new List<AdministradorModelView>();
+            var administradores = administradorServico.Todos(pagina);
+
+            foreach (var adm in administradores)
+            {
+                adms.Add(
+                    new AdministradorModelView
+                    {
+                        Id = adm.Id,
+                        Email = adm.Email,
+                        Perfil = adm.Perfil,
+                    }
+                );
+            }
+
+            return Results.Ok(adms);
         }
     )
     .WithTags("Administradores");
@@ -77,7 +91,14 @@ app.MapGet(
             if (administrador == null)
                 return Results.NotFound();
 
-            return Results.Ok(administrador);
+            return Results.Ok(
+                new AdministradorModelView
+                {
+                    Id = administrador.Id,
+                    Email = administrador.Email,
+                    Perfil = administrador.Perfil,
+                }
+            );
         }
     )
     .WithTags("Administradores");
@@ -114,7 +135,15 @@ app.MapPost(
 
                 administradorServico.Incluir(administrador);
 
-                return Results.Created($"/administrador/{administrador.Id}", administrador);
+                return Results.Created(
+                    $"/administrador/{administrador.Id}",
+                    new AdministradorModelView
+                    {
+                        Id = administrador.Id,
+                        Email = administrador.Email,
+                        Perfil = administrador.Perfil,
+                    }
+                );
             }
 
             return Results.BadRequest("Erro ao criar administrador.");
