@@ -69,12 +69,17 @@ cd minimal-api
 
 ### 2. 🔧 **Configure a string de conexão:**
 
-Edite o arquivo `appsettings.json` e ajuste a string de conexão do banco de dados conforme seu ambiente MySQL.
+Edite o arquivo `Api/appsettings.json` e ajuste a string de conexão do banco de dados conforme seu ambiente MySQL.
 
 ### 3. 📦 **Restaure os pacotes NuGet:**
 
 ```bash
+# Restaurar dependências de toda a solution
 dotnet restore
+
+# Ou restaurar individualmente
+dotnet restore Api/minimal-api.csproj
+dotnet restore Test/Test.csproj
 ```
 
 ## 🗃️ Migrações do Banco de Dados
@@ -83,10 +88,11 @@ O projeto utiliza o **Entity Framework Core** para gerenciar as migrações do b
 
 ### 🆕 **Criar uma nova migração**
 
-Para criar uma nova migração chamada `AdministradorMigration`, execute:
+Para criar uma nova migração, navegue até a pasta Api e execute:
 
 ```bash
-dotnet ef migrations add AdministradorMigration
+cd Api
+dotnet ef migrations add NomeDaMigracao
 ```
 
 ### 🔄 **Atualizar o banco de dados**
@@ -94,6 +100,7 @@ dotnet ef migrations add AdministradorMigration
 Para aplicar as migrações e criar/atualizar o banco de dados, execute:
 
 ```bash
+cd Api
 dotnet ef database update
 ```
 
@@ -198,6 +205,11 @@ exit;
 Para rodar a aplicação localmente:
 
 ```bash
+# Executar a partir da pasta raiz
+dotnet run --project Api
+
+# Ou navegue até a pasta Api
+cd Api
 dotnet run
 ```
 
@@ -237,36 +249,126 @@ dotnet run
 >
 > 🔑 **Roles**: Verifique as permissões de cada endpoint na seção de documentação da API.
 
+## 🧪 Executando os Testes
+
+O projeto inclui um projeto de testes unitários usando **MSTest** para garantir a qualidade e confiabilidade do código.
+
+### 🏃‍♂️ **Executar Todos os Testes**
+
+```bash
+dotnet test
+```
+
+### 🎯 **Executar Testes de um Projeto Específico**
+
+```bash
+dotnet test Test/Test.csproj
+```
+
+### 📊 **Executar Testes com Relatório de Cobertura**
+
+```bash
+dotnet test --collect:"XPlat Code Coverage"
+```
+
+### 🔍 **Executar Testes em Modo Verbose**
+
+```bash
+dotnet test --logger:"console;verbosity=detailed"
+```
+
+### 📋 **Estrutura dos Testes**
+
+O projeto de testes está organizado da seguinte forma:
+
+- 📁 **Test/** - Pasta principal dos testes
+  - 🧪 **Test1.cs** - Exemplo de teste unitário
+  - 📋 **MSTestSettings.cs** - Configurações dos testes
+  - 📦 **Test.csproj** - Dependências e configurações do projeto de teste
+
+### 🛠️ **Tecnologias de Teste Utilizadas**
+
+- **MSTest 3.6.4** - Framework de testes da Microsoft
+- **Microsoft.NET.Test.Sdk 17.12.0** - SDK para execução de testes
+- **Referência ao projeto Api** - Para testar os serviços e funcionalidades
+
+### 💡 **Dicas para Desenvolvimento de Testes**
+
+1. **Organize por categorias**: Crie classes separadas para testar diferentes serviços
+2. **Use nomes descritivos**: Métodos de teste devem explicar claramente o que está sendo testado
+3. **Padrão AAA**: Arrange (preparar), Act (executar), Assert (verificar)
+4. **Testes isolados**: Cada teste deve ser independente e não depender de outros
+5. **Mock de dependências**: Use mocks para isolar as unidades de teste
+
+### 🎯 **Exemplo de Estrutura de Teste**
+
+```csharp
+[TestClass]
+public class AdministradorServicoTests
+{
+    [TestMethod]
+    public void Login_ComCredenciaisValidas_DeveRetornarAdministradorLogado()
+    {
+        // Arrange
+        var email = "admin@teste.com";
+        var senha = "senha123";
+
+        // Act
+        var resultado = administradorServico.Login(loginDto);
+
+        // Assert
+        Assert.IsNotNull(resultado);
+        Assert.AreEqual(email, resultado.Email);
+    }
+}
+```
+
 ## 📁 Estrutura do Projeto
 
 ```
 📦 minimal-api/
-├── 🏛️ Dominio/
-│   ├── 📋 DTOs/           # Data Transfer Objects
-│   │   ├── AdministradorDTO.cs
-│   │   ├── LoginDTO.cs
-│   │   └── VeiculoDTO.cs
-│   ├── 🏢 Entidades/      # Entidades do negócio
-│   │   ├── Administrador.cs
-│   │   └── Veiculo.cs
-│   ├── 🔧 Enuns/          # Enumeradores
-│   │   └── Perfil.cs
-│   ├── 🔗 Interfaces/     # Contratos dos serviços
-│   │   ├── IAdministradorServico.cs
-│   │   └── IVeiculoServico.cs
-│   ├── 📊 ModelViews/     # Modelos de resposta
-│   │   ├── ErrosDeValidacao.cs
-│   │   └── Home.cs
-│   └── ⚙️ Servicos/       # Serviços da aplicação
-│       ├── AdministradorServico.cs
-│       └── VeiculoServico.cs
-├── 🔧 Infraestrutura/
-│   └── 🗄️ Db/            # Contexto do banco de dados
-│       └── DbContexto.cs
-├── 📚 Migrations/         # Migrações do Entity Framework
+├── 🚀 Api/                # Projeto principal da API
+│   ├── 🏛️ Dominio/
+│   │   ├── 📋 DTOs/           # Data Transfer Objects
+│   │   │   ├── AdministradorDTO.cs
+│   │   │   ├── LoginDTO.cs
+│   │   │   └── VeiculoDTO.cs
+│   │   ├── 🏢 Entidades/      # Entidades do negócio
+│   │   │   ├── Administrador.cs
+│   │   │   └── Veiculo.cs
+│   │   ├── 🔧 Enuns/          # Enumeradores
+│   │   │   └── Perfil.cs
+│   │   ├── 🔗 Interfaces/     # Contratos dos serviços
+│   │   │   ├── IAdministradorServico.cs
+│   │   │   └── IVeiculoServico.cs
+│   │   ├── 📊 ModelViews/     # Modelos de resposta
+│   │   │   ├── AdministradorLogado.cs
+│   │   │   ├── AdministradorModelView.cs
+│   │   │   ├── ErrosDeValidacao.cs
+│   │   │   └── Home.cs
+│   │   └── ⚙️ Servicos/       # Serviços da aplicação
+│   │       ├── AdministradorServico.cs
+│   │       └── VeiculoServico.cs
+│   ├── 🔧 Infraestrutura/
+│   │   └── 🗄️ Db/            # Contexto do banco de dados
+│   │       └── DbContexto.cs
+│   ├── 📚 Migrations/         # Migrações do Entity Framework
+│   ├── 📁 Properties/         # Configurações do projeto
+│   │   └── launchSettings.json
+│   ├── ⚙️ appsettings.json    # Configurações da aplicação
+│   ├── ⚙️ appsettings.Development.json
+│   ├── 📦 minimal-api.csproj  # Arquivo do projeto
+│   └── 🚀 Program.cs          # Configuração principal da API
+├── 🧪 Test/               # Projeto de testes unitários
+│   ├── 📋 MSTestSettings.cs   # Configurações dos testes
+│   ├── 🧪 Test1.cs           # Exemplo de teste unitário
+│   └── 📦 Test.csproj        # Arquivo do projeto de testes
+├── 📄 minimal-api.sln     # Solution file
 ├── 🎯 .vscode/           # Configurações do VS Code
 │   └── launch.json       # Configuração de debug
-└── 🚀 Program.cs          # Configuração principal da API
+├── 📖 README.md          # Documentação do projeto
+├── 📄 LICENSE            # Licença MIT
+└── 📋 CONTRIBUTING.md    # Guia de contribuição
 ```
 
 ## ⚠️ Observações Importantes
@@ -292,6 +394,8 @@ dotnet run
 - 📄 Paginação e filtros
 - 📚 Documentação XML completa
 - 🎯 Padrões DDD e Repository
+- 🧪 Testes unitários com MSTest
+- 📋 Estrutura organizada em projetos separados
 
 ## 🛠️ Tecnologias Utilizadas
 
@@ -308,6 +412,13 @@ dotnet run
 - **Migrations** - Controle de versão do schema
 - **Seed Data** - Dados iniciais para testes
 
+### **Testes**
+
+- **MSTest 3.6.4** - Framework de testes unitários da Microsoft
+- **Microsoft.NET.Test.Sdk 17.12.0** - SDK para execução de testes
+- **Testes Unitários** - Garantia de qualidade do código
+- **Cobertura de Testes** - Monitoramento da qualidade
+
 ### **Ferramentas de Desenvolvimento**
 
 - **VS Code** - Editor principal
@@ -322,6 +433,7 @@ dotnet run
 - **DTO Pattern** - Transferência segura de dados
 - **Dependency Injection** - Injeção de dependências nativa
 - **Nullable Reference Types** - Segurança de tipos
+- **Test-Driven Development (TDD)** - Desenvolvimento orientado a testes
 
 <br>
 
