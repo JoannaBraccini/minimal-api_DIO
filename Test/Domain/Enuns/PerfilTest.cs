@@ -1,6 +1,6 @@
 using MinimalApi.Dominio.Enuns;
 
-namespace Tests.Domain.Enuns;
+namespace Test.Domain.Enuns;
 
 [TestClass]
 public sealed class PerfilTest

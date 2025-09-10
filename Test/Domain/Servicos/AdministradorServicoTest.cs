@@ -5,7 +5,7 @@ using MinimalApi.Dominio.Servicos;
 using MinimalApi.DTOs;
 using MinimalApi.Infraestrutura.Db;
 
-namespace Tests.Domain.Servicos;
+namespace Test.Domain.Servicos;
 
 [TestClass]
 public class AdministradorServicoTest

@@ -1,7 +1,7 @@
 using MinimalApi.Dominio.ModelViews;
 using MinimalApi.DTOs;
 
-namespace Tests.Helpers;
+namespace Test.Helpers;
 
 [TestClass]
 public sealed class ValidacaoHelperTest

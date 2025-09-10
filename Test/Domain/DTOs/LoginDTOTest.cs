@@ -1,7 +1,7 @@
 using MinimalApi.Dominio.Enuns;
 using MinimalApi.DTOs;
 
-namespace Tests.Domain.DTOs;
+namespace Test.Domain.DTOs;
 
 [TestClass]
 public sealed class LoginDTOTest

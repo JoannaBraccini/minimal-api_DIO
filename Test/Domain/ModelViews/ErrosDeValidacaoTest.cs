@@ -1,6 +1,6 @@
 using MinimalApi.Dominio.ModelViews;
 
-namespace Tests.Domain.ModelViews;
+namespace Test.Domain.ModelViews;
 
 [TestClass]
 public sealed class ErrosDeValidacaoTest

@@ -1,6 +1,6 @@
 using MinimalApi.Dominio.Entidades;
 
-namespace Tests.Domain.Entidades;
+namespace Test.Domain.Entidades;
 
 [TestClass]
 public sealed class VeiculoTest

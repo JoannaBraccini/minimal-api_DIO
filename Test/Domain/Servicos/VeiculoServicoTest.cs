@@ -4,7 +4,7 @@ using MinimalApi.Dominio.Entidades;
 using MinimalApi.Dominio.Servicos;
 using MinimalApi.Infraestrutura.Db;
 
-namespace Tests.Domain.Servicos;
+namespace Test.Domain.Servicos;
 
 [TestClass]
 public class VeiculoServicoTest
