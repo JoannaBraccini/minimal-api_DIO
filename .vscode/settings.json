@@ -1,0 +1,10 @@
+{
+  "dotnet.defaultSolution": "minimal-api.sln",
+  "omnisharp.enableRoslynAnalyzers": true,
+  "omnisharp.enableEditorConfigSupport": true,
+  "files.exclude": {
+    "**/bin": true,
+    "**/obj": true
+  },
+  "dotnet.completion.showCompletionItemsFromUnimportedNamespaces": true
+}

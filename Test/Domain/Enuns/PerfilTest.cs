@@ -72,10 +72,9 @@ public sealed class PerfilTest
     }
 
     [TestMethod]
-    [ExpectedException(typeof(ArgumentException))]
     public void DeveRetornarErroParaValorInvalido()
     {
-        // Arrange & Act & Assert
-        Enum.Parse<Perfil>("invalido");
+        // Arrange, Act & Assert
+        Assert.ThrowsExactly<ArgumentException>(() => Enum.Parse<Perfil>("invalido"));
     }
 }

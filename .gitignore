@@ -104,3 +104,19 @@ $RECYCLE.BIN/
 *.lnk
 
 # End of https://www.toptal.com/developers/gitignore/api/windows,macos,linux,dotnetcore,visualstudiocode
+.fake
+
+# Arquivos específicos do projeto
+# Resultados de testes
+TestResults/
+*.trx
+*.coverage
+*.coveragexml
+
+# Arquivos de backup de banco de dados
+*.sql
+*.dump.sql
+*_backup.sql
+
+# Configurações locais de desenvolvimento (se necessário manter secretas)
+# appsettings.Development.json
